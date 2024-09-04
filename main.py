@@ -25,7 +25,10 @@ def process_countries(input_file, output_file):
             normalized_gmt_offset = normalize_gmt_offset(gmt_offset_name)
             if normalized_gmt_offset not in processed_data:
                 processed_data[normalized_gmt_offset] = []
-            processed_data[normalized_gmt_offset].append(country)
+            
+            # check if there is duplicate
+            if not any(c['id'] == country['id'] for c in processed_data[normalized_gmt_offset]):
+                processed_data[normalized_gmt_offset].append(country)
 
     # Write the processed data to the output JSON file
     with open(output_file, 'w', encoding='utf-8') as file:
