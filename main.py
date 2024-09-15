@@ -1,14 +1,22 @@
 import json
 
+# global veriable
+input_file = 'countries.json'
+output_file = 'post_process_countries.json'
+
+
+def read_json_file(file_path):
+    print(f"Reading file from {file_path}")
+    with open(file_path, 'r', encoding='utf-8') as file:
+        data = json.load(file)
+    return data
+
 
 def process_gmt_offset_string(gmt_offset_name):
     return gmt_offset_name[:6]
 
 
-def process_countries(input_file, output_file):
-    # Read the input JSON file
-    with open(input_file, 'r', encoding='utf-8') as file:
-        countries = json.load(file)
+def process_countries(countries):
 
     # Dictionary to hold the processed data
     processed_data = {}
@@ -24,15 +32,21 @@ def process_countries(input_file, output_file):
             # check if there is duplicate
             if country not in processed_data[processed_gmt_offset]:
                 processed_data[processed_gmt_offset].append(country)
-
-    # Write the processed data to the output JSON file
-    with open(output_file, 'w', encoding='utf-8') as file:
-        json.dump(processed_data, file, indent=4, ensure_ascii=False)
+    return processed_data
 
 
-# Define the input and output file paths
-input_file = 'countries.json'
-output_file = 'post_process_countries.json'
+# Write the processed data to the output JSON file
+def write_json_file(data, file_path):
+    print(f"Writing file to {file_path}")
+    with open(file_path, 'w', encoding='utf-8') as file:
+        json.dump(data, file, indent=4, ensure_ascii=False)
 
-# Call the function to process the countries
-process_countries(input_file, output_file)
+
+def main():
+    countries = read_json_file(input_file)
+    processed_data = process_countries(countries)
+    write_json_file(processed_data, output_file)
+
+
+if __name__ == "__main__":
+    main()
